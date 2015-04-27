@@ -1,0 +1,56 @@
+#***************************************************************************
+#                                  _   _ ____  _
+#  Project                     ___| | | |  _ \| |
+#                             / __| | | | |_) | |
+#                            | (__| |_| |  _ <| |___
+#                             \___|\___/|_| \_\_____|
+#
+# Copyright (C) 1998 - 2011, Daniel Stenberg, <daniel@haxx.se>, et al.
+#
+# This software is licensed as described in the file COPYING, which
+# you should have received as part of this distribution. The terms
+# are also available at http://curl.haxx.se/docs/copyright.html.
+#
+# You may opt to use, copy, modify, merge, publish, distribute and/or sell
+# copies of the Software, and permit persons to whom the Software is
+# furnished to do so, under the terms of the COPYING file.
+#
+# This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+# KIND, either express or implied.
+#
+###########################################################################
+
+# What to call the final executable
+TARGET = httpclient
+
+# Which object files that the executable consists of
+OBJS= httpclient.o
+
+# What compiler to use
+CC = gcc
+
+# Compiler flags, -g for debug, -c to make an object file
+CFLAGS = -c -g
+
+# This should point to a directory that holds libcurl, if it isn't
+# in the system's standard lib dir
+# We also set a -L to include the directory where we have the openssl
+# libraries
+LDFLAGS = -L/usr/local/ssl/lib
+
+# We need -lcurl for the curl stuff
+# We need -lsocket and -lnsl when on Solaris
+# We need -lssl and -lcrypto when using libcurl with SSL support
+# We need -lpthread for the pthread example
+LIBS = -lcurl
+
+# Link the target with all objects and libraries
+$(TARGET) : $(OBJS)
+	$(CC)  -o $(TARGET) $(OBJS) $(LDFLAGS) $(LIBS)
+
+# Compile the source files into object files
+httpclient.o : httpclient.c
+	$(CC) $(CFLAGS) $<
+
+clean:
+	rm *.o
